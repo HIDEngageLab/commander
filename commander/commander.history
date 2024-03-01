@@ -1,0 +1,29 @@
+list
+quit
+close all
+list
+open /dev/ttyUSB0
+help
+list
+help
+help about
+about
+quit
+list
+help
+storage
+list
+help hci
+help hid
+config
+close all
+config pt_only
+close all
+config
+config board
+close all
+config board
+storage
+storage env
+storage get keypad
+quit
