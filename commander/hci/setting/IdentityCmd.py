@@ -9,14 +9,25 @@ from commander.hci.GenericCmd import GenericCmd
 
 
 class IdentityCmd(GenericCmd):
+    FUNCTION = {
+        'GET': GenericCmd.FUNCTION['GET'],
+        'SET': GenericCmd.FUNCTION['SET'],
+    }
 
-    PART = {'SERIAL': 0x00,
-            'PLATFORM': 0x03,
-            'ILLEGAL': 0xff}
+    PART = {
+        'FIRMWARE': 0,
+        'HARDWARE': 1,
+        'PLATFORM': 2,
+        'PRODUCT': 3,
+        'SERIAL': 4,
+        'UNIQUE': 5,
 
-    RESULT = {'SUCCESS': 0x00,
-              'FAILURE': 0x01,
-              'UNSUPPORTED': 0x02}
+        'UNDEFINED': 0xff,
+    }
+
+    RESULT = {
+        **GenericCmd.RESULT,
+    }
 
     def __init__(self, direction):
         GenericCmd.__init__(self, GenericCmd.COMMANDS['IDENTITY'], direction)

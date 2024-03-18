@@ -55,20 +55,21 @@ class HciHandler(SerLogger):
                 if 'address' in command:
                     if command['address'] == self.__host.address:
                         if len(command['payload']) > 0:
-                            hci_parser = HciParser(
-                                command['payload'], alias=self.__alias)
+                            hci_parser = HciParser(command['payload'],
+                                                   alias=self.__alias)
                             if hci_parser is not None:
                                 output.show(data=hci_parser.__str__(),
                                             alias=self.__alias)
-                                self.__auto_responser(
-                                    hci_parser.get_command(), self.__alias)
+                                self.__auto_responser(hci_parser.get_command(),
+                                                      self.__alias)
 
                                 hci_command = hci_parser.get_command()
                                 assert hci_command is not None, 'hci handler error: unknown command object'
 
                                 from commander.storage.Storage import Storage
                                 Storage.storage.variable = {
-                                    self.__alias.upper(): hci_command.fields}
+                                    self.__alias.upper(): hci_command.fields,
+                                }
 
                         else:
                             # commands without payload

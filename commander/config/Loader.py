@@ -41,4 +41,5 @@ class Loader:
                 from commander.utilities.dict_tweaks import dict_to_type
                 self.__config = dict_to_type('config', _data)
             except Exception as message:
-                raise Exception('key loader: json load from ' + self.__filename + '\n%s' % message)
+                raise Exception('key loader: json load from ' +
+                                self.__filename + '\n%s' % message)

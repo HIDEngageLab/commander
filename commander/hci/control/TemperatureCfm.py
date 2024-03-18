@@ -21,17 +21,22 @@ class TemperatureCfm(TemperatureCmd):
             raise 'unknown command id: %04X' % command[0]
 
         payload = command[1]
-        if len(payload) < 3:
+        if len(payload) < 4:
             print('payload empty')
-            payload += [0xff] * (3 - len(payload))
+            payload += [0xff] * (4 - len(payload))
 
         self.__result = payload[0]
+        self.__function = payload[1]
         from commander.utilities.floats import convert_to_float
-        self.__temperature = convert_to_float(payload[1:])
+        self.__temperature = convert_to_float(payload[2:])
 
     @property
     def result(self):
         return self.__result
+
+    @property
+    def function(self):
+        return self.__function
 
     @property
     def temperature(self):
@@ -42,6 +47,7 @@ class TemperatureCfm(TemperatureCmd):
         return {
             self.str_command(self.command, GenericCmd.COMMANDS, '_'): {
                 'RESULT': GenericCmd.str_field(self.result, TemperatureCmd.RESULT),
+                'FUNCTION': GenericCmd.str_field(self.function, TemperatureCmd.FUNCTION),
                 'TEMPERATURE': self.temperature,
             }
         }
@@ -49,9 +55,11 @@ class TemperatureCfm(TemperatureCmd):
     def __str__(self):
         from commander.utilities.PrettyPrint import VDELIM
         s = ''
-        s += '%-20s%c %02X %s\n' % (
-            'command', VDELIM, self.command, self.str_command(self.command, GenericCmd.COMMANDS))
-        s += '%-20s%c %02X %s\n' % (
-            'result', VDELIM, self.__result, GenericCmd.str_field(self.result, TemperatureCmd.RESULT))
+        s += '%-20s%c %02X %s\n' % ('command', VDELIM, self.command,
+                                    self.str_command(self.command, GenericCmd.COMMANDS))
+        s += '%-20s%c %02X %s\n' % ('result', VDELIM, self.result,
+                                    GenericCmd.str_field(self.result, TemperatureCmd.RESULT))
+        s += '%-20s%c %02X %s\n' % ('function', VDELIM, self.function,
+                                    GenericCmd.str_field(self.function, TemperatureCmd.FUNCTION))
         s += '%-20s%c %5.2f C' % ('temperature', VDELIM, self.temperature)
         return s

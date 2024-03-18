@@ -5,52 +5,40 @@
 # SPDX-FileContributor: Created by Roman Koch
 # SPDX-License-Identifier: MIT
 
-from commander.utilities.floats import convert_to_long, convert_to_float
+from commander.utilities.floats import convert_to_bytes, convert_to_long, convert_to_float
 
 
 class Position:
     """
-    node position two 4 byte long values
+    MCU position two float (4 byte) values
 
     input:
         hex, latitude longitude in sec
     """
 
-    DEFAULT = None
+    DEFAULT = [49.441624, 11.053797]
 
-    def __init__(self, value=DEFAULT):
-        if value is None:
-            self._latitude = 0
-            self._longitude = 0
-        else:
-            if len(value) == 2:
-                self._latitude = convert_to_long(float(value[0]))
-                self._longitude = convert_to_long(float(value[1]))
-            else:
-                raise Exception('Position setter: enter two hex values')
+    def __init__(self, _value=DEFAULT):
+        self.__latitude = 0
+        self.__longitude = 0
+
+        if len(_value) == 2:
+            _value = convert_to_bytes(_value[0]) + \
+                convert_to_bytes(_value[1])
+
+        self.serialize(_value)
 
     @property
     def value(self):
-        v1 = [(self._latitude >> 24) & 0xff,
-              (self._latitude >> 16) & 0xff,
-              (self._latitude >> 8) & 0xff,
-              self._latitude & 0xff]
+        return convert_to_bytes(self.__latitude) + \
+            convert_to_bytes(self.__longitude)
 
-        v2 = [(self._longitude >> 24) & 0xff,
-              (self._longitude >> 16) & 0xff,
-              (self._longitude >> 8) & 0xff,
-              self._longitude & 0xff]
+    def serialize(self, _value):
+        if len(_value) != self.type_len:
+            raise Exception('set position: check payload length')
 
-        return v1 + v2
-
-    def serialize(self, value):
-        if len(value) != self.type_len:
-            raise Exception('Position setter: check payload length')
-
-        self._latitude = (value[0] << 24) + (value[1] <<
-                                             16) + (value[2] << 8) + value[3]
-        self._longitude = (value[4] << 24) + \
-            (value[5] << 16) + (value[6] << 8) + value[7]
+        self.__latitude = convert_to_float(_value[0:4])
+        self.__longitude = convert_to_float(_value[4:8])
 
     @property
     def type_len(self):
@@ -58,8 +46,8 @@ class Position:
 
     def __str__(self):
         s = ''
-        s += '%08X ' % self._latitude
-        s += '%08X ' % self._longitude
-        s += '(LAT:%7.4f, ' % convert_to_float(self.value[0:4])
-        s += 'LON:%7.4f) ' % convert_to_float(self.value[4:8])
+        s += '%s ' % ''.join(['%02x'%a for a in self.value[0:4]])
+        s += '%s ' % ''.join(['%02x'%a for a in self.value[4:8]])
+        s += '(LAT:%7.4f, ' % self.__latitude
+        s += 'LON:%7.4f) ' % self.__longitude
         return s

@@ -26,7 +26,7 @@ class TermBase:
         try:
             self.__serial_list.erase()
         except Exception as msg:
-            output.show_error(msg)
+            output.show_error(str(msg))
 
     @property
     def serial_list(self):
@@ -88,7 +88,7 @@ class TermBase:
                                           alias)
                         return False
                 except Exception as message:
-                    output.show_error('open ports: %s' % message)
+                    output.show_error('open ports error: %s' % message)
                     return False
             else:
                 output.show_error('open ports: device %s not found in config.json' %

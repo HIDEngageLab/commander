@@ -21,9 +21,9 @@ class TemperatureInd(TemperatureCmd):
             raise 'unknown command id: %04X' % command[0]
 
         payload = command[1]
-        if len(payload) < 2:
+        if len(payload) < 4:
             print('payload empty')
-            payload += [0xff] * (2 - len(payload))
+            payload += [0xff] * (4 - len(payload))
 
         from commander.utilities.floats import convert_to_float
         self.__temperature = convert_to_float(payload[0:])
@@ -43,7 +43,7 @@ class TemperatureInd(TemperatureCmd):
     def __str__(self):
         from commander.utilities.PrettyPrint import VDELIM
         s = ''
-        s += '%-20s%c %02X %s\n' % (
-            'command', VDELIM, self.command, self.str_command(self.command, GenericCmd.COMMANDS))
+        s += '%-20s%c %02X %s\n' % ('command', VDELIM, self.command,
+                                    self.str_command(self.command, GenericCmd.COMMANDS))
         s += '%-20s%c %5.2f C' % ('temperature', VDELIM, self.temperature)
         return s

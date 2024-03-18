@@ -53,8 +53,9 @@ class SerialPortThreaded:
         if self.__interpreter == SerialPortThreaded.INTERPRETER['hci']:
             self.__handler = HciHandler(self, _alias)
         elif self.__interpreter == SerialPortThreaded.INTERPRETER['scpi']:
-            dialect = _parameter.dialect
-            self.__handler = ScpiHandler(self, _alias, dialect)
+            pass
+            #dialect = _parameter.dialect
+            #self.__handler = ScpiHandler(self, _alias, dialect)
 
         assert self.__handler is not None, "port %s handler is none" % _alias
 

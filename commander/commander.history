@@ -1,29 +1,100 @@
+adapter gpio 2 hig
+adapter gpio 1 out
+adapter gpio 2 out
+adapter gpio 3 out
+adapter gpio 3 high
+adapter gpio 3 value
+adapter gpio 2 value
+adapter gpio 1 value
+adapter gpio 0 value
+adapter gpio 0
+adapter gpio 0 out
+adapter gpio 0 value
+adapter gpio 0 high
+adapter gpio 0 value
+adapter gpio 0 high
+adapter gpio 0 low
+adapter gpio 0 high
+adapter gpio 0 value
+adapter gpio 0 low
+adapter gpio 0 value
+adapter gpio 0 low
+adapter gpio 0 high
+adapter gpio 0 value
+adapter gpio 0 low
+adapter gpio 0 in
+adapter gpio 0 low
+adapter gpio 0 in
+adapter gpio 0 low
+adapter gpio 0 value
+adapter gpio 0 enable
+adapter gpio 0 in
+mark
+adapter gpio 0 value
+mark
+adapter gpio 0 value
+adapter gpio 0 in
+adapter gpio 0 enable
+adapter gpio 0 disable
+adapter gpio 0 enable
+adapter gpio 0 disable
+adapter gpio 0 in
+enable
+adapter gpio 0 enable
+adapter gpio 0 in
+adapter gpio 0 enable
+adapter gpio 10 enable
+adapter gpio 0 enable
+adapter gpio 0 blub
+adapter gpio 0 out
+adapter gpio 0 high
+adapter gpio 0 value
+adapter gpio 0 low
+adapter gpio 0 enable
+adapter gpio 0 in
+adapter gpio 0 disable
+adapter gpio 0 enable
+adapter gpio 0 in
+adapter gpio 0 enable
+adapter gpio 0 in
+adapter gpio 0 enable
+adapter gpio 0 in
+adapter gpio 0 enable
+adapter gpio 0 in
 list
-quit
 close all
-list
-open /dev/ttyUSB0
-help
-list
-help
-help about
-about
+open
+config
+config board
 quit
-list
-help
-storage
-list
+hekp hci
 help hci
-help hid
-config
-close all
-config pt_only
-close all
-config
-config board
-close all
-config board
-storage
-storage env
-storage get keypad
-quit
+list
+adapter keypad hci enable
+adapter keypad enable hci
+adapter keypad disable hid
+adapter keypad enable hid
+adapter keypad disable hci
+adapter keypad disable hid
+adapter keypad enable hci
+help keypad
+help hci
+adapter keypad get
+adapter keypad set 1
+adapter keypad set telefon
+adapter keypad set navigation
+adapter keypad get
+adapter keypad set number
+adapter keypad set functional
+adapter keypad set numer
+adapter keypad set number
+adapter keypad click 0 65
+adapter keypad click 0 27
+adapter keypad click 0 0
+adapter keypad click 0 2
+adapter keypad click 0 0
+adapter keypad set functional
+adapter keypad click 0 0
+adapter keypad set number
+adapter keypad click 0 0
+help hci

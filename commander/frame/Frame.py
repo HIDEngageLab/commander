@@ -71,10 +71,20 @@ class Frame:
         if len(data) < 6:
             return False
 
+        frame_start = 0
+        while len(data[frame_start:]) > 0 and data[frame_start] != Frame.DELIM:
+            frame_start += 1
+
+        while len(data[frame_start:]) > 0 and data[frame_start] == Frame.DELIM:
+            if len(data[frame_start:]) > 1 and data[frame_start+1] == Frame.DELIM:
+                frame_start += 1
+            else:
+                break
+
         # find next frame end marker
         delim_found = False
         dlen = 0
-        for byte in data[3:]:
+        for byte in data[frame_start+3:]:
             dlen += 1
             if byte == Frame.DELIM:
                 delim_found = True
@@ -88,7 +98,7 @@ class Frame:
 
         # un-escape
         a = []
-        for byte in data[:dlen + 6]:
+        for byte in data[frame_start:dlen + 6 + frame_start]:
             a = a + [byte]
 
         b = [a[0]]
@@ -186,21 +196,32 @@ class Frame:
             if self.verbosity >= 0x0f:
                 print('hdlc deserialize: wrong start delimiter')
 
+        frame_start = 0
+        while len(byte_string[frame_start:]) > 0 and byte_string[frame_start] != Frame.DELIM:
+            frame_start += 1
+
+        while len(byte_string[frame_start:]) > 0 and byte_string[frame_start] == Frame.DELIM:
+            if len(byte_string[frame_start:]) > 1 and byte_string[frame_start+1] == Frame.DELIM:
+                frame_start += 1
+            else:
+                break
+
         delim_found = False
         dlen = 0
-        for byte in byte_string[3:]:
+        for byte in byte_string[frame_start+3:]:
             dlen += 1
             if byte == Frame.DELIM:
                 delim_found = True
                 break
         dlen -= 3
+
         if not delim_found:
             self.__print(byte_string)
             if self.verbosity >= 0x0f:
                 print('hdlc deserialize: incomplete message')
 
         a = []
-        for byte in byte_string:
+        for byte in byte_string[frame_start:dlen + 6 + frame_start]:
             a = a + [byte]
         b = [a[0]]
         for i in range(1, len(a)):
@@ -227,7 +248,7 @@ class Frame:
 
         if check != in_calc_check:
             if self.verbosity >= 0x0f:
-                print('hdlc deserialize: wrong checksum: check:%d calc:%d' %
+                print('hdlc deserialize: wrong checksum: check:%x calc:%x' %
                       (check, in_calc_check))
 
         if b[dlen + 5] != Frame.DELIM:

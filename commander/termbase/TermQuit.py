@@ -16,6 +16,6 @@ def quit(_args=None):
         TermBase.termbase.quit_commander_tk()
     except Exception as msg:
         import commander.termbase as output
-        output.show_error(msg)
+        output.show_error(str(msg))
 
     return True

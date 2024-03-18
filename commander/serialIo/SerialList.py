@@ -5,6 +5,8 @@
 # SPDX-FileContributor: Created by Roman Koch
 # SPDX-License-Identifier: MIT
 
+from commander.serialIo.threaded.SerialPortThreaded import SerialPortThreaded
+
 
 class SerialList(object):
     """
@@ -16,7 +18,7 @@ class SerialList(object):
         self.device = {}
 
     def add(self, _alias, _device, _parameter):
-        #assert 'device' in _device, "serial list add: open %s, no device specified" % _alias
+        # assert 'device' in _device, "serial list add: open %s, no device specified" % _alias
         for val in list(self.device.values()):
             assert val != _device.device, 'device %s already opened with alias %s' % (
                 _device.device, _alias)
@@ -42,7 +44,6 @@ class SerialList(object):
                             break
 
         self.device[_alias] = _device.device
-        from commander.serialIo.threaded.SerialPortThreaded import SerialPortThreaded
         self.serial[_alias] = SerialPortThreaded(_alias, _device,  _parameter)
         if not self.serial[_alias].start():  # could not open port, remove association
             del self.serial[_alias]

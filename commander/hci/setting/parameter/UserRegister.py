@@ -8,32 +8,37 @@
 
 class UserRegister:
     """
-    test register (16 bit for user values)
+    user register (16 bit for user values)
 
     input:
-        hex
+        two hex bytes, like: ab cd
     """
 
-    def __init__(self, value=None):
-        if value is not None:
-            self.__value = int(value[0], 16) & 0xffff
-        else:
-            self.__value = 0
+    DEFAULT = [0, 0]
+
+    def __init__(self, _value=DEFAULT):
+        self.__value = UserRegister.DEFAULT
+        self.serialize(_value)
 
     @property
     def value(self):
-        return [(self.__value >> 8) & 0xff, self.__value & 0xff]
+        return self.__value
 
-    def serialize(self, value):
-        if len(value) != self.type_len:
-            raise Exception('TestRegister setter: check payload length')
+    def serialize(self, _value):
+        if len(_value) != self.type_len:
+            self.__value = UserRegister.DEFAULT
 
-        self.__value = (value[0] << 8) + value[1]
+        self.__value = []
+        for item in _value:
+            if isinstance(item, str):
+                self.__value.append(int(item, 16))
+            else:
+                self.__value.append(item)
 
     @property
     def type_len(self):
         return 2
 
     def __str__(self):
-        s = '%04X (%d)' % (self.__value, self.__value)
-        return s           
+        s = '%02X%02X ' % (self.__value[0], self.__value[1])
+        return s

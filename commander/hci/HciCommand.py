@@ -31,7 +31,7 @@ class HciCommand:
             entered_cmd = cmd_line[0].lower().strip()
 
             if entered_cmd in HciCommand.command_dict:
-                return HciCommand.command_dict[entered_cmd](cmd_line)
+                return HciCommand.command_dict[entered_cmd](cmd_line[1:])
 
             else:
                 output.show_text('unknown HCI command: %s' %

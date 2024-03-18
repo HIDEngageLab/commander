@@ -6,6 +6,9 @@
 # SPDX-License-Identifier: MIT
 
 
+from commander.hci.GenericCmd import GenericCmd
+
+
 class Backlight:
     """
     backlight parameter
@@ -18,33 +21,44 @@ class Backlight:
         hex array, like: 07 ff 00 00 00 ff 00 00 ff
     """
 
+    MODE = {
+        'ALERT': 0x00,
+        'CONST': 0x01,
+        'MEDIUM': 0x02,
+        'MORPH': 0x03,
+        'MOUNT': 0x04,
+        'OFF': 0x05,
+        'SET': 0x06,
+        'SLOW': 0x07,
+        'SUSPEND': 0x08,
+        'TURBO': 0x09,
+        'UNDEFINED': 0xff,
+    }
+
     DEFAULT = [0x09, 0x00, 0x0f, 0x0f, 0x00, 0x0e, 0x1f, 0x3a, 0x98]
 
-    def __init__(self, value=DEFAULT):
-        if value is not None:
-            self.__mode = int(value[0], 16)
-            self.__left = value[1:4]
-            self.__right = value[4:7]
-            self.__timeout = (value[7] << 8) + (value[8])
-        else:
-            self.__mode = int(Backlight.DEFAULT[0], 16)
-            self.__left = Backlight.DEFAULT[1:4]
-            self.__right = Backlight.DEFAULT[4:7]
-            self.__timeout = (
-                Backlight.DEFAULT[7] << 8) + (Backlight.DEFAULT[8])
+    def __init__(self, _value=None):
+        self.serialize(_value if _value is not None else Backlight.DEFAULT)
+
+    def serialize(self, _value):
+        if len(_value) != self.type_len:
+            _value = Backlight.DEFAULT
+
+        value = []
+        for item in _value:
+            if isinstance(item, str):
+                value.append(int(item, 16))
+            else:
+                value.append(item)
+
+        self.__mode = value[0]
+        self.__left = value[1:4]
+        self.__right = value[4:7]
+        self.__timeout = (value[7] << 8) + (value[8])
 
     @property
     def value(self):
         return [self.__mode] + self.__left + self.__right + [(self.__timeout >> 8) & 0xff, self.__timeout & 0xff]
-
-    def serialize(self, value):
-        if len(value) != self.type_len:
-            value = Backlight.DEFAULT
-
-        self.__mode = int(value[0], 16)
-        self.__left = value[1:4]
-        self.__right = value[4:7]
-        self.__timeout = (value[7] << 8) + (value[8])
 
     @property
     def type_len(self):
@@ -52,14 +66,14 @@ class Backlight:
 
     def __str__(self):
         s = ''
-        s += 'mode: %d, (%04X)' % (self.__mode,
-                                   self.__mode)
-        s += 'left: #%04X%04X%04X' % (self.__left[0],
+        s += 'mode: %02X (%d %s)' % (self.__mode, self.__mode,
+                                     GenericCmd.str_field(self.__mode, Backlight.MODE))
+        s += 'left: #%02X%02X%02X' % (self.__left[0],
                                       self.__left[1],
                                       self.__left[2])
-        s += 'right: #%04X%04X%04X' % (self.__right[0],
+        s += 'right: #%02X%02X%02X' % (self.__right[0],
                                        self.__right[1],
                                        self.__right[2])
-        s += ' timeout: %d (%04X)' % (self.__timeout,
+        s += ' timeout: %04X (%d)' % (self.__timeout,
                                       self.__timeout)
         return s

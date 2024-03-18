@@ -45,6 +45,38 @@ class GenericParam(object):
     def __init__(self):
         pass
 
+    # @staticmethod
+    # def check_param(identifier):
+    #     from commander.hci.setting.parameter.GenericParam import GenericParam
+    #     if identifier == GenericParam.PARAM_ID['BACKLIGHT']:
+    #         from commander.hci.setting.parameter.Backlight import Backlight
+    #         return Backlight()
+    #     elif identifier == GenericParam.PARAM_ID['DISPLAY']:
+    #         from commander.hci.setting.parameter.Display import Display
+    #         return Display()
+    #     elif identifier == GenericParam.PARAM_ID['FEATURES']:
+    #         from commander.hci.setting.parameter.Features import Features
+    #         return Features()
+    #     elif identifier == GenericParam.PARAM_ID['KEYPAD']:
+    #         from commander.hci.setting.parameter.Keypad import Keypad
+    #         return Keypad()
+    #     elif identifier == GenericParam.PARAM_ID['MAINTAINER']:
+    #         from commander.hci.setting.parameter.Maintainer import Maintainer
+    #         return Maintainer()
+    #     elif identifier == GenericParam.PARAM_ID['MAPPING']:
+    #         from commander.hci.setting.parameter.Mapping import Mapping
+    #         return Maintainer()
+    #     elif identifier == GenericParam.PARAM_ID['POSITION']:
+    #         from commander.hci.setting.parameter.Position import Position
+    #         return Position()
+    #     elif identifier == GenericParam.PARAM_ID['SERIAL_NUMBER']:
+    #         from commander.hci.setting.parameter.SerialNumber import SerialNumber
+    #         return SerialNumber()
+    #     elif identifier == GenericParam.PARAM_ID['USER']:
+    #         from commander.hci.setting.parameter.UserRegister import UserRegister
+    #         return UserRegister()
+    #     return None
+
     @staticmethod
     def list_all():
         from commander.utilities.PrettyPrint import DLINE, SLINE, sp, wd, DNCON, CRCON, UPCON, VDELIM

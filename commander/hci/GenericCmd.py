@@ -6,10 +6,19 @@
 # SPDX-License-Identifier: MIT
 
 
-class GenericCmd(object):
-    # a1 b2 c3 e4 22 00 00 00 00 00 00 00 00 00 00
-    MAX_PAYLOAD_LEN = 32
+def get_value(type_definition, key):
+    if key in type_definition.__dict__:
+        return type_definition.__dict__[key]
+    else:
+        raise Exception('unknown value')
 
+
+def get_key(type_definition, value):
+    return [k for k, v in type_definition.__dict__.items() if v == value][0]
+
+
+class GenericCmd(object):
+    MAX_PAYLOAD_LEN = 32
     DIRECTION_OFFSET = 2
 
     DIRECTION = {
@@ -20,17 +29,41 @@ class GenericCmd(object):
     }
 
     COMMANDS = {
-        'BACKLIGHT': (0x0e << DIRECTION_OFFSET),
-        'DISPLAY': (0x08 << DIRECTION_OFFSET),
-        'GADGET': (0x02 << DIRECTION_OFFSET),
-        'GPIO': (0x11 << DIRECTION_OFFSET),
-        'HASH': (0x07 << DIRECTION_OFFSET),
-        'IDENTITY': (0x05 << DIRECTION_OFFSET),
-        'KEYPAD': (0x0c << DIRECTION_OFFSET),
-        'PARAMETER': (0x06 << DIRECTION_OFFSET),
-        'PROTOCOL': (0x00 << DIRECTION_OFFSET),
-        'RESET': (0x01 << DIRECTION_OFFSET),
-        'TEMPERATURE': (0x0d << DIRECTION_OFFSET),
+        'BACKLIGHT': (0x01 << DIRECTION_OFFSET),
+        'DISPLAY': (0x02 << DIRECTION_OFFSET),
+        'GADGET': (0x03 << DIRECTION_OFFSET),
+        'GPIO': (0x04 << DIRECTION_OFFSET),
+        'HASH': (0x05 << DIRECTION_OFFSET),
+        'IDENTITY': (0x06 << DIRECTION_OFFSET),
+        'KEYPAD': (0x07 << DIRECTION_OFFSET),
+        'PARAMETER': (0x08 << DIRECTION_OFFSET),
+        'PROTOCOL': (0x09 << DIRECTION_OFFSET),
+        'RESET': (0x0A << DIRECTION_OFFSET),
+        'TEMPERATURE': (0x0B << DIRECTION_OFFSET),
+    }
+
+    RESULT = {
+        'ERROR': 0x04,
+        'FAILURE': 0x01,
+        'SUCCESS': 0x00,
+        'UNKNOWN': 0x02,
+        'UNSUPPORTED': 0x03,
+
+        'CUSTOM': 0x80,
+    }
+
+    FUNCTION = {
+        'CLEAN': 0x08,
+        'DISABLE': 0x03,
+        'ENABLE': 0x02,
+        'GET': 0x00,
+        'OFF': 0x07,
+        'ON': 0x06,
+        'SET': 0x01,
+        'START': 0x04,
+        'STOP': 0x05,
+
+        'CUSTOM': 0x80,
     }
 
     def __init__(self, command, direction):

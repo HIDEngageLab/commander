@@ -9,10 +9,19 @@ from commander.hci.GenericCmd import GenericCmd
 
 
 class TemperatureCmd(GenericCmd):
-    RESULT = {'SUCCESS': 0x00,
-              'FAILURE': 0x01}
+
+    RESULT = {
+        **GenericCmd.RESULT,
+    }
+
+    FUNCTION = {
+        'GET': GenericCmd.FUNCTION['GET'],
+
+        'ALARM': GenericCmd.FUNCTION['CUSTOM'],
+
+        'UNDEFINED': 0xff
+    }
 
     def __init__(self, direction):
-        GenericCmd.__init__(self, GenericCmd.COMMANDS['TEMPERATURE'], direction)
-
-
+        GenericCmd.__init__(
+            self, GenericCmd.COMMANDS['TEMPERATURE'], direction)

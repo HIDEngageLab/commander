@@ -9,47 +9,58 @@
 class Mapping:
     """
     mapping parameter
-
+        Custom mapping table, 24 bytes. 
+        - button 1-5 and 6-10, 
+        - incremental encoder 1 (up, dn, select) and 2 (up, dn, select)
+        - joystick 1 (left, right, up, dn) and 2 (left, right, up, dn)
     input:
-
+        24 hex values
     """
 
-    DEFAULT_CLICK_MS = '128'
-    DEFAULT_PUSH_MS = '384'
-    DEFAULT = [DEFAULT_CLICK_MS, DEFAULT_PUSH_MS]
+    DEFAULT = [0xff, 0xff, 0xff, 0xff, 0xff,
+               0xff, 0xff, 0xff, 0xff, 0xff,
+               0xff, 0xff, 0xff,
+               0xff, 0xff, 0xff,
+               0xff, 0xff, 0xff, 0xff,
+               0xff, 0xff, 0xff, 0xff]
 
-    def __init__(self, value=DEFAULT):
-        if value is not None:
-            self.__click_ms = int(value[0], 10)
-            self.__push_ms = int(value[1], 10)
-        else:
-            self.__click_ms = Mapping.DEFAULT_CLICK_MS
-            self.__push_ms = Mapping.DEFAULT_PUSH_MS
+    def __init__(self, _value=DEFAULT):
+        self.__table = [0xff] * self.type_len
+        self.serialize(_value if _value is not None else Mapping.DEFAULT)
 
     @property
     def value(self):
-        v1 = [(self.__click_ms >> 8) & 0xff, self.__click_ms & 0xff]
-        v2 = [(self.__push_ms >> 8) & 0xff, self.__push_ms & 0xff]
+        return self.__table
 
-        return v1 + v2
+    def serialize(self, _value):
+        if len(_value) != self.type_len:
+            _value = Mapping.DEFAULT
 
-    def serialize(self, value):
-        if len(value) != self.type_len:
-            v1 = [(Mapping.DEFAULT_CLICK_MS >> 8) &
-                  0xff, Mapping.DEFAULT_CLICK_MS & 0xff]
-            v2 = [(Mapping.DEFAULT_PUSH_MS >> 8) &
-                  0xff, Mapping.DEFAULT_PUSH_MS & 0xff]
-            value = v1 + v2
+        value = []
+        for item in _value:
+            if isinstance(item, str):
+                value.append(int(item, 16))
+            else:
+                value.append(item)
 
-        self.__click_ms = (value[0] << 8) + value[1]
-        self.__push_ms = (value[2] << 8) + value[3]
+        self.__table = value
 
     @property
     def type_len(self):
-        return 4
+        return 24
 
     def __str__(self):
         s = ''
-        s += 'click: %d, (%04X)' % (self.__click_ms, self.__click_ms)
-        s += ' push: %d (%04X)' % (self.__push_ms, self.__push_ms)
+        s += 'mapping: '
+        s += ' '.join(['%02X' %a for a in self.__table[0:5]])
+        s += ', '
+        s += ' '.join(['%02X' %a for a in self.__table[5:10]])
+        s += ', '
+        s += ' '.join(['%02X' %a for a in self.__table[10:13]])
+        s += ', '
+        s += ' '.join(['%02X' %a for a in self.__table[13:16]])
+        s += ', '
+        s += ' '.join(['%02X' %a for a in self.__table[16:20]])
+        s += ', '
+        s += ' '.join(['%02X' %a for a in self.__table[20:24]])
         return s

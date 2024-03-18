@@ -79,7 +79,7 @@ def open(cmd_line):
                                      alias)
                     return False
         except Exception as msg:
-            output.show_error(msg)
+            output.show_error(str(msg))
             return False
     else:
         output.show_error('syntax: open ' + ' '.join(cmd_line))
