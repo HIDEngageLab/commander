@@ -13,6 +13,7 @@
     "cSpell.words": [
         "baudrate",
         "CRCON",
+        "DEESCAPE",
         "DLINE",
         "DNCON",
         "doctrim",
@@ -20,7 +21,9 @@
         "gpio",
         "Gpio",
         "GPIO",
+        "HDLC",
         "HLINE",
+        "MCSA",
         "RRGGBB",
         "stopbits",
         "tabspace",

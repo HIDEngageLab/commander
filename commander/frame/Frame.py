@@ -8,6 +8,7 @@
 from commander.frame.Trash import Trash
 from commander.utilities.PrettyPrint import SLINE, wd
 from commander.frame.CheckSum import CheckSum
+from commander.config import verbosity
 
 
 class Frame:
@@ -23,8 +24,23 @@ class Frame:
         self.trash = Trash()
 
         self.verbosity = Frame.DEFAULT_VERBOSITY
-        from commander.config import verbosity
         self.verbosity = verbosity()
+
+        self.__start = 0
+        self.__stop = 0
+        self.__data = None
+
+    @property
+    def data(self):
+        return self.__data
+
+    @property
+    def start(self):
+        return self.__start
+
+    @property
+    def stop(self):
+        return self.__stop
 
     def __print(self, byte_string):
         # Achtung: gibt kompletten buffer aus
@@ -36,28 +52,27 @@ class Frame:
         if self.verbosity >= 0x0f:
             print('frame payload parser reg: %d' % address)
 
-    def serialize(self, address, unserialized_data):
+    def serialize(self, address, _data):
         if address not in Frame.PARSERS:
             if self.verbosity >= 0x0f:
                 print('frame check: unknown address')
             return False
 
-        ctrl, serialized_data = self.PARSERS[address].serialize(
-            unserialized_data)
+        ctrl, data = self.PARSERS[address].serialize(_data)
 
-        checksum = CheckSum('crc16').perform(serialized_data)
+        checksum = CheckSum('crc16').perform(data)
 
-        command = [address, ctrl] + serialized_data + \
+        command = [address, ctrl] + data + \
             [checksum >> 8, checksum & 0xff]
-        checked_command = []
 
+        escaped_command = []
         for byte in command:
             if byte in Frame.ESCAPE:
-                checked_command = checked_command + Frame.ESCAPE[byte]
+                escaped_command = escaped_command + Frame.ESCAPE[byte]
             else:
-                checked_command = checked_command + [byte]
+                escaped_command = escaped_command + [byte]
 
-        tmp_buffer = [Frame.DELIM] + checked_command + [Frame.DELIM]
+        tmp_buffer = [Frame.DELIM] + escaped_command + [Frame.DELIM]
         bytes_string = b''.join(b'%c' % byte for byte in tmp_buffer)
 
         if self.verbosity >= 0x0f:
@@ -68,6 +83,10 @@ class Frame:
         return bytes_string
 
     def check(self, data):
+        self.__start = 0
+        self.__stop = 0
+        self.__data = None
+
         if len(data) < 6:
             return False
 
@@ -81,43 +100,44 @@ class Frame:
             else:
                 break
 
+        self.__start = frame_start
+        data = data[frame_start:]
+
         # find next frame end marker
         delim_found = False
-        dlen = 0
-        for byte in data[frame_start+3:]:
-            dlen += 1
+        data_len = 0
+        for byte in data[3:]:
+            data_len += 1
             if byte == Frame.DELIM:
                 delim_found = True
                 break
         if not delim_found:
             return False
-        dlen -= 3
+        data_len -= 3
 
-        if dlen < 0:
+        if data_len < 0:
             return False
 
-        # un-escape
-        a = []
-        for byte in data[frame_start:dlen + 6 + frame_start]:
-            a = a + [byte]
+        self.__stop = self.__start + data_len + 6
 
+        # un-escape
+        a = [byte for byte in data[:data_len + 6]]
         b = [a[0]]
         for i in range(1, len(a)):
             if a[i - 1] == Frame.DEESCAPE[0] and a[i] in Frame.DEESCAPE[1]:
                 b[-1] = Frame.DEESCAPE[1][a[i]]
-                dlen -= 1
+                data_len -= 1
                 continue
             else:
                 b = b + [a[i]]
-
         if b[0] != Frame.DELIM:
             if self.verbosity >= 0x0f:
                 print('frame check: wrong start delimiter')
             return False
 
-        in_calc_check = CheckSum('crc16').perform(b[3:dlen + 3])
+        in_calc_check = CheckSum('crc16').perform(b[3:data_len + 3])
 
-        check = (b[dlen + 3] << 8) + b[dlen + 4]
+        check = (b[data_len + 3] << 8) + b[data_len + 4]
         if check != in_calc_check:
             if self.verbosity >= 0x0f:
                 print('%s' % (b''.join(b'%02X' % byte for byte in b)))
@@ -125,134 +145,25 @@ class Frame:
                       (check, in_calc_check))
             return False
 
-        if b[dlen + 5] != Frame.DELIM:
+        if b[data_len + 5] != Frame.DELIM:
             if self.verbosity >= 0x0f:
                 print('frame check: wrong stop delimiter')
             return False
 
+        self.__data = b
+
         return True
 
-    def next_frame(self, byte_string):
-        if len(byte_string) == 0:
-            return False
+    def deserialize(self, _frame):
+        print('HDLC rx:', ' '.join('%02X' % byte for byte in _frame))
 
-        if byte_string[0] != Frame.DELIM:
-            self.__print(byte_string)
-            print('frame next_frame: wrong delimiter')
-            return False
-
-        delim_found = False
-        dlen = 3
-        for byte in byte_string[3:]:
-            dlen += 1
-            if byte == Frame.DELIM:
-                delim_found = True
-                break
-
-        if not delim_found:
-            self.__print(byte_string)
-            print('frame next_frame: incomplete message')
-            return 0
-
-        return dlen
-
-    def skip(self, byte_string):
-        if len(byte_string) == 0:
-            return 0
-        elif len(byte_string) == 1:
-            if byte_string[0] == Frame.DELIM:
-                return 0
-            else:
-                return 1
-
-        delim_found = False
-        dlen = 1
-        for byte in byte_string[1:]:
-            if byte == Frame.DELIM:
-                delim_found = True
-                break
-            dlen += 1
-
-        # print 'dlen', dlen,
-        if not delim_found:
-            self.__print(byte_string)
-            return 0
-
-        return dlen
-
-    def deserialize(self, byte_string):
-        if self.verbosity >= 0x0f:
-            print(SLINE * wd)
-            print('HDLC rx: %s' %
-                  (' '.join('%02X' % byte for byte in byte_string)).upper())
-
-        if len(byte_string) < 6:
-            if self.verbosity >= 0x0f:
-                print('hdlc deserialize: wrong hdlc length: %d', len(byte_string))
-            return False
-
-        if byte_string[0] != Frame.DELIM:
-            self.__print(byte_string)
-            if self.verbosity >= 0x0f:
-                print('hdlc deserialize: wrong start delimiter')
-
-        frame_start = 0
-        while len(byte_string[frame_start:]) > 0 and byte_string[frame_start] != Frame.DELIM:
-            frame_start += 1
-
-        while len(byte_string[frame_start:]) > 0 and byte_string[frame_start] == Frame.DELIM:
-            if len(byte_string[frame_start:]) > 1 and byte_string[frame_start+1] == Frame.DELIM:
-                frame_start += 1
-            else:
-                break
-
-        delim_found = False
-        dlen = 0
-        for byte in byte_string[frame_start+3:]:
-            dlen += 1
-            if byte == Frame.DELIM:
-                delim_found = True
-                break
-        dlen -= 3
-
-        if not delim_found:
-            self.__print(byte_string)
-            if self.verbosity >= 0x0f:
-                print('hdlc deserialize: incomplete message')
-
-        a = []
-        for byte in byte_string[frame_start:dlen + 6 + frame_start]:
-            a = a + [byte]
-        b = [a[0]]
-        for i in range(1, len(a)):
-            if a[i - 1] == Frame.DEESCAPE[0] and a[i] in Frame.DEESCAPE[1]:
-                b[-1] = Frame.DEESCAPE[1][a[i]]
-                dlen -= 1
-                continue
-            else:
-                b = b + [a[i]]
-        byte_string = b''.join([b'%c' % i for i in b])
-
-        address = byte_string[1]
+        address = _frame[1]
         parser = self.trash
         if address in Frame.PARSERS:
             parser = Frame.PARSERS[address]
 
-        ctrl = byte_string[2]
+        ctrl = _frame[2]
 
-        payload = b[3:dlen + 3]
-
-        in_calc_check = CheckSum('crc16').perform(payload)
-
-        check = (b[dlen + 3] << 8) + b[dlen + 4]
-
-        if check != in_calc_check:
-            if self.verbosity >= 0x0f:
-                print('hdlc deserialize: wrong checksum: check:%x calc:%x' %
-                      (check, in_calc_check))
-
-        if b[dlen + 5] != Frame.DELIM:
-            if self.verbosity >= 0x0f:
-                print('hdlc deserialize: wrong stop delimiter')
+        payload = _frame[3:-3]
 
         return {'address': address, 'ctrl': ctrl, 'payload': parser.deserialize(ctrl, payload)}

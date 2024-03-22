@@ -1,100 +1,100 @@
-adapter gpio 2 hig
-adapter gpio 1 out
-adapter gpio 2 out
-adapter gpio 3 out
-adapter gpio 3 high
-adapter gpio 3 value
-adapter gpio 2 value
-adapter gpio 1 value
-adapter gpio 0 value
-adapter gpio 0
-adapter gpio 0 out
-adapter gpio 0 value
-adapter gpio 0 high
-adapter gpio 0 value
-adapter gpio 0 high
-adapter gpio 0 low
-adapter gpio 0 high
-adapter gpio 0 value
-adapter gpio 0 low
-adapter gpio 0 value
-adapter gpio 0 low
-adapter gpio 0 high
-adapter gpio 0 value
-adapter gpio 0 low
-adapter gpio 0 in
-adapter gpio 0 low
-adapter gpio 0 in
-adapter gpio 0 low
-adapter gpio 0 value
-adapter gpio 0 enable
-adapter gpio 0 in
-mark
-adapter gpio 0 value
-mark
-adapter gpio 0 value
-adapter gpio 0 in
-adapter gpio 0 enable
-adapter gpio 0 disable
-adapter gpio 0 enable
-adapter gpio 0 disable
-adapter gpio 0 in
-enable
-adapter gpio 0 enable
-adapter gpio 0 in
-adapter gpio 0 enable
-adapter gpio 10 enable
-adapter gpio 0 enable
-adapter gpio 0 blub
-adapter gpio 0 out
-adapter gpio 0 high
-adapter gpio 0 value
-adapter gpio 0 low
-adapter gpio 0 enable
-adapter gpio 0 in
-adapter gpio 0 disable
-adapter gpio 0 enable
-adapter gpio 0 in
-adapter gpio 0 enable
-adapter gpio 0 in
-adapter gpio 0 enable
-adapter gpio 0 in
-adapter gpio 0 enable
-adapter gpio 0 in
-list
+adapter parameter get mapping
+adapter keypad get
+adapter keypad set custom
+adapter keypad get
+adapter parameter get mapping
+adapter parameter set mapping 00 27 00 1F 00 1e FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF
+adapter parameter get mapping
+adapter parameter set mapping 00 27 00 1F 00 1e FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF
+adapter parameter get mapping
+adapter reset
+adapter parameter get mapping
+adapter parameter set mapping 00 27 00 1F 00 1e FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF
+adapter parameter get mapping
+adapter parameter set mapping 00 27 00 1F 00 1e FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF
+adapter parameter set mapping 00 27 00 1F 00 1e 00 1d FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF
+adapter parameter get mapping
+adapter parameter set mapping 00 27 00 1F 00 1e 00 1d FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF
+help hci
+adapter parameter list
+adapter parameter get mapping
+adapter parameter get mapping 0
+adapter parameter get mapping 1
+adapter parameter get mapping 2
+adapter parameter get mapping 3
+adapter parameter
+adapter parameter help
+adapter parameter help mapping
+adapter parameter help
+adapter parameter get mapping 3
+adapter parameter set mapping 3 00 1b
+adapter parameter get mapping 3
+adapter parameter get mapping 0
+adapter parameter get mapping 1
+adapter parameter get mapping 2
+adapter parameter get mapping 3
+adapter parameter get mapping 4
+adapter parameter get mapping 100
+adapter parameter get mapping 1
+adapter parameter get mapping 2
+adapter parameter get mapping 3
+adapter parameter get mapping 2
+adapter parameter set mapping 2 00 65
+adapter parameter get mapping 2
+set mapping custom
+adapter mapping set custom
+help hci
+adapter keypad get
+adapter keypad set custom
+adapter parameter get mapping 0
+adapter keypad set custom
+adapter parameter get mapping 0
+adapter keypad set custom
+adapter parameter get mapping 2
+adapter keypad set custom
+adapter parameter get mapping 2
+adapter keypad set custom
+adapter parameter get mapping 2
+adapter parameter get mapping 0
+adapter keypad set custom
+adapter parameter get mapping 0
+adapter keypad set custom
+adapter parameter get mapping 0
+adapter keypad set custom
+adapter parameter get mapping 0
+adapter keypad set custom
+adapter parameter get mapping 0
+adapter keypad set custom
+adapter parameter get mapping 0
+adapter keypad set custom
+adapter parameter get mapping 0
+adapter keypad set custom
+adapter parameter get mapping 0
+adapter keypad set custom
+adapter parameter get mapping 0
+adapter keypad set custom
 close all
-open
 config
-config board
-quit
-hekp hci
-help hci
 list
-adapter keypad hci enable
-adapter keypad enable hci
-adapter keypad disable hid
-adapter keypad enable hid
-adapter keypad disable hci
-adapter keypad disable hid
-adapter keypad enable hci
-help keypad
-help hci
+config board
+list
+adapter reset
+adapter keypad set custom
 adapter keypad get
-adapter keypad set 1
-adapter keypad set telefon
-adapter keypad set navigation
-adapter keypad get
-adapter keypad set number
-adapter keypad set functional
-adapter keypad set numer
-adapter keypad set number
-adapter keypad click 0 65
-adapter keypad click 0 27
-adapter keypad click 0 0
-adapter keypad click 0 2
-adapter keypad click 0 0
-adapter keypad set functional
-adapter keypad click 0 0
-adapter keypad set number
-adapter keypad click 0 0
+adapter identitiy
 help hci
+adapter identity
+adapter identity product
+adapter identity platform
+adapter serial
+adapter
+adapter mark
+mark
+adapter firmware
+adapter hardware
+adapter parameter list
+adapter parameter maintainer
+adapter parameter get maintainer
+adapter parameter set maintainer 03 07
+adapter hardware
+adapter parameter get maintainer

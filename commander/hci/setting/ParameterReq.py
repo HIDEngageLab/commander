@@ -31,6 +31,13 @@ class ParameterReq(ParameterCmd):
         elif self.function == ParameterCmd.FUNCTION['SET']:
             self.__parameter = parameter(_value)
 
+        self.__index = None
+        if self.identifier == GenericParam.PARAM_ID['MAPPING'] and self.function == ParameterCmd.FUNCTION['GET']:
+            if _value is None:
+                self.__index = 0
+            else:
+                self.__index = int(_value[0], 10)
+
     @property
     def function(self):
         return self.__function
@@ -44,10 +51,18 @@ class ParameterReq(ParameterCmd):
         return self.__parameter
 
     @property
+    def index(self):
+        return self.__index
+
+    @property
     def sdu(self):
         sdu = [self.command, self.identifier, self.function]
         if self.function == ParameterCmd.FUNCTION['SET']:
             sdu += self.parameter.value
+
+        if self.identifier == GenericParam.PARAM_ID['MAPPING'] and self.function == ParameterCmd.FUNCTION['GET']:
+            sdu += [self.index]
+
         return sdu
 
     def __str__(self):
@@ -64,4 +79,8 @@ class ParameterReq(ParameterCmd):
         if self.function == ParameterCmd.FUNCTION['SET']:
             s += '\n'
             s += '%-20s%c %s' % ('value', VDELIM, self.parameter)
+        if self.identifier == GenericParam.PARAM_ID['MAPPING'] and self.function == ParameterCmd.FUNCTION['GET']:
+            s += '\n'
+            s += '%-20s%c %02X %d' % ('index', VDELIM, self.index, self.index)
+
         return s

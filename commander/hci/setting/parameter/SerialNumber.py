@@ -19,8 +19,8 @@ class SerialNumber:
     DEFAULT = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
 
-    def __init__(self, _value=DEFAULT):
-        self.__value = [0x00] * self.type_len
+    def __init__(self, _value=None):
+        _value = _value if _value is not None else SerialNumber.DEFAULT
 
         if not isinstance(_value, list):
             _value = SerialNumber.DEFAULT

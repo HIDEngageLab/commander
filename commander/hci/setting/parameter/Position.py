@@ -18,10 +18,11 @@ class Position:
 
     DEFAULT = [49.441624, 11.053797]
 
-    def __init__(self, _value=DEFAULT):
+    def __init__(self, _value=None):
         self.__latitude = 0
         self.__longitude = 0
 
+        _value = _value if _value is not None else Position.DEFAULT
         if len(_value) == 2:
             _value = convert_to_bytes(_value[0]) + \
                 convert_to_bytes(_value[1])
@@ -46,8 +47,8 @@ class Position:
 
     def __str__(self):
         s = ''
-        s += '%s ' % ''.join(['%02x'%a for a in self.value[0:4]])
-        s += '%s ' % ''.join(['%02x'%a for a in self.value[4:8]])
+        s += '%s ' % ''.join(['%02x' % a for a in self.value[0:4]])
+        s += '%s ' % ''.join(['%02x' % a for a in self.value[4:8]])
         s += '(LAT:%7.4f, ' % self.__latitude
         s += 'LON:%7.4f) ' % self.__longitude
         return s

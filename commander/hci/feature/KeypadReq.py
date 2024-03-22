@@ -60,7 +60,8 @@ class KeypadReq(KeypadCmd):
         if self.identifier == KeypadCmd.IDENTIFIER['KEYCODE']:
             return base + [self.modifier, self.code]
         elif self.identifier == KeypadCmd.IDENTIFIER['MAPPING']:
-            return base + [self.table]
+            if self.function == KeypadCmd.FUNCTION['SET']:
+                return base + [self.table]
 
         return base
 
@@ -103,9 +104,10 @@ class KeypadReq(KeypadCmd):
             s += '\n'
             s += '%-20s%c %02X %d' % ('code', VDELIM, self.code, self.code)
         elif self.identifier == KeypadCmd.IDENTIFIER['MAPPING']:
-            s += '\n'
-            s += '%-20s%c %02X %s' % ('table', VDELIM, self.table,
-                                      GenericCmd.str_field(self.table, KeypadCmd.TABLE))
+            if self.function == KeypadCmd.FUNCTION['SET']:
+                s += '\n'
+                s += '%-20s%c %02X %s' % ('table', VDELIM, self.table,
+                                          GenericCmd.str_field(self.table, KeypadCmd.TABLE))
         else:
             pass
 

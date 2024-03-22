@@ -16,8 +16,10 @@ class UserRegister:
 
     DEFAULT = [0, 0]
 
-    def __init__(self, _value=DEFAULT):
+    def __init__(self, _value=None):
         self.__value = UserRegister.DEFAULT
+
+        _value = _value if _value is not None else UserRegister.DEFAULT
         self.serialize(_value)
 
     @property

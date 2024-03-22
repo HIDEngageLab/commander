@@ -48,54 +48,45 @@ class HciHandler(SerLogger):
         self.__rx_buffer += _data
 
         while self.__frame.check(self.__rx_buffer):
-            delim = self.__frame.next_frame(self.__rx_buffer)
-            if self.__rx_buffer[:delim] != '':
-                command = self.__frame.deserialize(self.__rx_buffer[:delim])
-                self.__rx_buffer = self.__rx_buffer[delim:]
-                if 'address' in command:
-                    if command['address'] == self.__host.address:
-                        if len(command['payload']) > 0:
-                            hci_parser = HciParser(command['payload'],
-                                                   alias=self.__alias)
-                            if hci_parser is not None:
-                                output.show(data=hci_parser.__str__(),
-                                            alias=self.__alias)
-                                self.__auto_responser(hci_parser.get_command(),
-                                                      self.__alias)
+            command = self.__frame.deserialize(self.__frame.data)
+            self.__rx_buffer = self.__rx_buffer[self.__frame.stop:]
+            if 'address' in command:
+                if command['address'] == self.__host.address:
+                    if len(command['payload']) > 0:
+                        hci_parser = HciParser(command['payload'],
+                                               alias=self.__alias)
+                        if hci_parser is not None:
+                            output.show(data=hci_parser.__str__(),
+                                        alias=self.__alias)
+                            self.__auto_responser(hci_parser.get_command(),
+                                                  self.__alias)
 
-                                hci_command = hci_parser.get_command()
-                                assert hci_command is not None, 'hci handler error: unknown command object'
+                            hci_command = hci_parser.get_command()
+                            assert hci_command is not None, 'hci handler error: unknown command object'
 
-                                from commander.storage.Storage import Storage
-                                Storage.storage.variable = {
-                                    self.__alias.upper(): hci_command.fields,
-                                }
+                            from commander.storage.Storage import Storage
+                            Storage.storage.variable = {
+                                self.__alias.upper(): hci_command.fields,
+                            }
 
-                        else:
-                            # commands without payload
-                            pass
-
-                    elif command['address'] == self.__except.address:
-                        message = ''.join(
-                            '%02X' % byte for byte in command['payload']['data'])
-                        output.show(data='crash@0x' + message,
-                                    alias=self.__alias, direction=':X', lf=' ')
                     else:
-                        message = command['payload']['msg'].__str__()
-                        output.show(data=('%02X %02X ' %
-                                          (command['address'],
-                                           command['ctrl'])) + message,
-                                    alias=self.__alias, direction='??', lf=' ')
-                else:
-                    # commands without address field
-                    pass
+                        # commands without payload
+                        pass
 
-        else:
-            delim = self.__frame.skip(self.__rx_buffer)
-            if delim > 0:
-                print('drop buffer content:' +
-                      ' '.join(['0x%02X' % i for i in self._HciHandler__rx_buffer[:delim]]))
-                self.__rx_buffer = self.__rx_buffer[delim:]
+                elif command['address'] == self.__except.address:
+                    message = ''.join(
+                        '%02X' % byte for byte in command['payload']['data'])
+                    output.show(data='crash@0x' + message,
+                                alias=self.__alias, direction=':X', lf=' ')
+                else:
+                    message = command['payload']['msg'].__str__()
+                    output.show(data=('%02X %02X ' %
+                                      (command['address'],
+                                       command['ctrl'])) + message,
+                                alias=self.__alias, direction='??', lf=' ')
+            else:
+                # commands without address field
+                pass
 
     def __auto_responser(self, _cmd, _alias):
         pass
