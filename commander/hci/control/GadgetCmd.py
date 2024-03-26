@@ -9,7 +9,7 @@ from commander.hci.GenericCmd import GenericCmd
 
 
 class GadgetCmd(GenericCmd):
-    MODE = {
+    STATE = {
         'ACTIVE': 0x01,
         'IDLE': 0x00,
         'PENDING': 0x03,
@@ -30,7 +30,11 @@ class GadgetCmd(GenericCmd):
     }
 
     RESULT = {
-        **GenericCmd.RESULT,
+        'FAILURE': GenericCmd.RESULT['FAILURE'],
+        'SUCCESS': GenericCmd.RESULT['SUCCESS'],
+        'UNKNOWN': GenericCmd.RESULT['UNKNOWN'],
+        'UNSUPPORTED': GenericCmd.RESULT['UNSUPPORTED'],
+
         'WRONG_STATE': GenericCmd.RESULT['CUSTOM'],
     }
 

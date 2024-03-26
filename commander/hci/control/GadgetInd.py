@@ -26,7 +26,7 @@ class GadgetInd(GadgetCmd):
             payload += [0xff] * (6 - len(payload))
 
         self.__function = payload[0]
-        self.__mode = payload[1]
+        self.__state = payload[1]
         self.__unique = (payload[2] << 24) + \
             (payload[3] << 16) + \
             (payload[4] << 8) + \
@@ -37,8 +37,8 @@ class GadgetInd(GadgetCmd):
         return self.__function
 
     @property
-    def mode(self):
-        return self.__mode
+    def state(self):
+        return self.__state
 
     @property
     def unique(self):
@@ -49,7 +49,7 @@ class GadgetInd(GadgetCmd):
         return {
             self.str_command(self.command, GenericCmd.COMMANDS, '_'): {
                 'FUNCTION': self.str_field(self.function, GadgetCmd.FUNCTION),
-                'MODE': self.str_field(self.mode, GadgetCmd.MODE),
+                'MODE': self.str_field(self.state, GadgetCmd.STATE),
                 'UNIQUE': self.unique,
             }
         }
@@ -63,8 +63,8 @@ class GadgetInd(GadgetCmd):
         s += '%-20s%c %02X %s' % ('function', VDELIM, self.function,
                                   self.str_field(self.function, GadgetCmd.FUNCTION))
         s += '\n'
-        s += '%-20s%c %02X %s' % ('mode', VDELIM, self.mode,
-                                  self.str_field(self.mode, GadgetCmd.MODE))
+        s += '%-20s%c %02X %s' % ('state', VDELIM, self.state,
+                                  self.str_field(self.state, GadgetCmd.STATE))
         s += '\n'
         s += '%-20s%c %04X' % ('unique', VDELIM, self.unique)
         return s

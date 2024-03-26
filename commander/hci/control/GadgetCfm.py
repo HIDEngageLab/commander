@@ -27,7 +27,7 @@ class GadgetCfm(GadgetCmd):
 
         self.__result = payload[0]
         self.__function = payload[1]
-        self.__mode = payload[2]
+        self.__state = payload[2]
         self.__unique = (payload[3] << 24) + \
             (payload[4] << 16) + \
             (payload[5] << 8) + \
@@ -42,8 +42,8 @@ class GadgetCfm(GadgetCmd):
         return self.__function
 
     @property
-    def mode(self):
-        return self.__mode
+    def state(self):
+        return self.__state
 
     @property
     def unique(self):
@@ -55,7 +55,7 @@ class GadgetCfm(GadgetCmd):
             self.str_command(self.command, GenericCmd.COMMANDS, '_'): {
                 'RESULT': GenericCmd.str_field(self.result, GadgetCmd.RESULT),
                 'FUNCTION': self.str_field(self.function, GadgetCmd.FUNCTION),
-                'MODE': self.str_field(self.mode, GadgetCmd.MODE),
+                'STATE': self.str_field(self.state, GadgetCmd.STATE),
                 'UNIQUE': self.unique,
             }
         }
@@ -72,9 +72,9 @@ class GadgetCfm(GadgetCmd):
         s += '%-20s%c %02X %s' % ('function', VDELIM, self.function,
                                   self.str_field(self.function, GadgetCmd.FUNCTION))
         s += '\n'
-        s += '%-20s%c %02X %s' % ('mode', VDELIM, self.mode,
-                                  self.str_field(self.mode, GadgetCmd.MODE))
+        s += '%-20s%c %02X %s' % ('state', VDELIM, self.state,
+                                  self.str_field(self.state, GadgetCmd.STATE))
         s += '\n'
         s += '%-20s%c %02X %s' % ('unique', VDELIM, self.unique,
-                                  self.str_field(self.unique, GadgetCmd.MODE))
+                                  self.str_field(self.unique, GadgetCmd.STATE))
         return s
