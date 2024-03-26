@@ -1,0 +1,100 @@
+adapter gadget
+adapter gadget suspend
+adapter gadget resume
+adapter gadget
+adapter gadget resume
+adapter gadget suspend
+adapter gadget
+adapter gadget resume
+adapter gadget suspend
+adapter gadget resume
+adapter gadget suspend
+adapter gadget resume
+adapter gadget umount
+adapter gadget unmount
+adapter parameter features
+adapter parameter get features
+adapter parameter set features 70 00
+adapter reset
+adapter gadget unmount
+adapter gadget
+adapter gadget mount
+adapter gadget suspend
+adapter gadget mount
+adapter gadget resume
+adapter gadget unmount
+adapter gadget mount
+adapter gadget resume
+adapter gadget mount
+adapter gadget unmount
+adapter gadget mount
+adapter gadget unmount
+adapter gadget suspend
+adapter gadget mount
+adapter gadget suspend
+adapter gadget mount
+adapter gadget resume
+adapter gadget unmount
+adapter gadget suspend
+adapter gadget resume
+adapter gadget mount
+adapter gadget
+adapter gadget resume
+adapter gadget suspend
+adapter gadget mount
+adapter gadget resume
+adapter gadget mount
+adapter gadget resume
+adapter gadget unmount
+adapter gadget resume
+adapter gadget suspend
+adapter gadget mount
+adapter gadget suspend
+adapter gadget unmount
+adapter gadget resume
+adapter gadget suspend
+adapter gadget resume
+adapter gadget suspend
+adapter gadget unmount
+adapter gadget resume
+adapter gadget unmount
+adapter gadget mount
+help
+help hci
+adapter hash ab bc cd de ef
+adapter hash "romsila"
+adapter temperature get
+adapter temperature help
+adapter temperature alarm 20
+help hci
+adapter keypad
+adapter keypad enable hid
+adapter keypad disaböle hci
+adapter keypad disable hci
+adapter keypad enable hci
+help hci
+adapter firmware
+adapter hardware
+adapter identity
+adapter identity product
+adapter identity platform
+adapter serial
+adapter parameter
+adapter parameter help
+adapter reset help
+adapter reset format
+adapter reset
+adapter serial
+adapter keypad
+adapter keypad click 0
+adapter keypad click 0 0
+adapter keypad click 0 1
+adapter keypad
+adapter keypad get
+adapter keypad set telefon
+adapter keypad click 0 0
+adapter keypad click 0 1
+adapter keypad set telefon
+adapter keypad click 0 1
+adapter keypad set telefon
+help hci
